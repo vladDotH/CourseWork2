@@ -1,11 +1,11 @@
 #include "Viewer.h"
 
 Viewer::Viewer(QWidget *parent) : QWidget(parent) {
-    layout = new QVBoxLayout(this);
+    lt = new QVBoxLayout(this);
     scrollArea = new QScrollArea(this);
-    imageLabel = new QLabel(scrollArea);
-    layout->addWidget(scrollArea);
-    setLayout(layout);
+    imageLabel = new ImageLabel(scrollArea);
+    lt->addWidget(scrollArea);
+    setLayout(lt);
 
     imageLabel->setBackgroundRole(QPalette::Base);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
@@ -14,7 +14,7 @@ Viewer::Viewer(QWidget *parent) : QWidget(parent) {
     scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setWidget(imageLabel);
     scrollArea->setVisible(true);
-    imageLabel->setText("Browse an image");
+    imageLabel->setText("Загрузите изображение");
     imageLabel->adjustSize();
 }
 
@@ -28,5 +28,8 @@ const QImage &Viewer::getImage() const {
     return image;
 }
 
+ImageLabel *Viewer::getImageLabel() const {
+    return imageLabel;
+}
 
 

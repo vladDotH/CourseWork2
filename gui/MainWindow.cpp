@@ -1,25 +1,21 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-
-    QAction *openAct = fileMenu->addAction(tr("&Open"), this, &MainWindow::open);
-    openAct->setShortcut(QKeySequence::Open);
-
-    QAction *saveAct = fileMenu->addAction(tr("&Save as"), this, &MainWindow::saveAs);
-    saveAct->setShortcut(QKeySequence::SaveAs);
-
-    QAction *exitAct = fileMenu->addAction(tr("E&xit"), this, &QWidget::close);
-    exitAct->setShortcut(tr("Ctrl+Q"));
+    QMenu *fileMenu = menuBar()->addMenu(tr("Файл"));
+    fileMenu->addAction(tr("Открыть"), this, &MainWindow::open);
+    fileMenu->addAction(tr("Сохранить как"), this, &MainWindow::saveAs);
+    fileMenu->addAction(tr("Выход"), this, &QWidget::close);
 
     central = new QSplitter(this);
-    layout = new QGridLayout(central);
+    lt = new QGridLayout(central);
     viewer = new Viewer(central);
     toolBar = new ToolBar(central);
 
-    layout->addWidget(viewer, 0, 0);
-    layout->addWidget(toolBar, 0, 1);
-    central->setLayout(layout);
+    connect(viewer->getImageLabel(), &ImageLabel::mouseEvent, toolBar, &ToolBar::mouseHandler);
+
+    lt->addWidget(viewer, 0, 0);
+    lt->addWidget(toolBar, 0, 1);
+    central->setLayout(lt);
     setCentralWidget(central);
     resize(QGuiApplication::primaryScreen()->availableSize() / 2);
 }

@@ -22,23 +22,28 @@
 #include <QStandardPaths>
 #include <QStatusBar>
 #include <QVBoxLayout>
+#include <QMouseEvent>
+#include <QDebug>
+#include "ImageLabel.h"
 
 class Viewer : public QWidget {
 Q_OBJECT
-private:
-    QImage image;
-    QLabel *imageLabel;
-    QScrollArea *scrollArea;
-    QVBoxLayout *layout;
-
 public:
+
     Viewer(QWidget *parent = nullptr);
+    ImageLabel *getImageLabel() const;
 
 public slots:
 
     void setImage(const QImage &newImage);
 
     const QImage &getImage() const;
+
+private:
+    QImage image;
+    ImageLabel *imageLabel;
+    QScrollArea *scrollArea;
+    QVBoxLayout *lt;
 };
 
 #endif //CW2_VIEWER_H

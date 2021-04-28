@@ -14,8 +14,8 @@
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QSplitter>
-#include <tools/ToolBar.h>
-#include "Viewer.h"
+#include <toolbar/ToolBar.h>
+#include "viewer/Viewer.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -35,7 +35,7 @@ private slots:
 
 private:
     QSplitter *central;
-    QGridLayout *layout;
+    QGridLayout *lt;
     Viewer *viewer;
     ToolBar *toolBar;
 };
