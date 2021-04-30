@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 project(graphics)
 
 set(LIB_SRC BitMap.cpp BitMap.h Vector.cpp Vector.h Color.cpp Color.h)
