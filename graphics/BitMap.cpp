@@ -245,7 +245,7 @@ namespace Graphics {
                 v2 = 2 * p - c2;
                 vs = Vec2D(rotate.x * v2, rotate.y * v2);
                 ps = (vs + c2) / 2;
-                if (ps >= null && p >= null && ps <= end && p <= end)
+                if (ps >= null && p >= null && ps < end && p < end)
                     setPixel(ps, copy.getPixel(p));
             }
         }
