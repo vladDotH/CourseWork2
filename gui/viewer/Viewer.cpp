@@ -8,28 +8,20 @@ Viewer::Viewer(QWidget *parent) : QWidget(parent) {
     setLayout(lt);
 
     imageLabel->setBackgroundRole(QPalette::Base);
-    imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    imageLabel->setScaledContents(true);
-
     scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setWidget(imageLabel);
     scrollArea->setVisible(true);
     imageLabel->setText("Загрузите изображение");
     imageLabel->adjustSize();
+
+    connect(imageLabel, &ImageLabel::mouseEvent, [this](QMouseEvent *ev) {
+        emit mouseEvent(ev);
+    });
 }
 
-void Viewer::setImage(const QImage &newImage) {
-    image = newImage;
-    imageLabel->setPixmap(QPixmap::fromImage(image));
+void Viewer::setImage(QPixmap *qimg) {
+    imageLabel->setPixmap(*qimg);
     imageLabel->adjustSize();
-}
-
-const QImage &Viewer::getImage() const {
-    return image;
-}
-
-ImageLabel *Viewer::getImageLabel() const {
-    return imageLabel;
 }
 
 

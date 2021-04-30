@@ -14,8 +14,13 @@
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QSplitter>
+#include <QPainter>
 #include <toolbar/ToolBar.h>
+#include <qgraphics/BitMapQ.h>
 #include "viewer/Viewer.h"
+#include "BitMap.h"
+
+using Graphics::BitMap;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -33,11 +38,15 @@ private slots:
 
     void saveAs();
 
+signals:
+    void paintEvent(QMouseEvent *ev, BitMapQ *bm);
+
 private:
     QSplitter *central;
     QGridLayout *lt;
     Viewer *viewer;
     ToolBar *toolBar;
+    BitMapQ img;
 };
 
 #endif //CW2_MAINWINDOW

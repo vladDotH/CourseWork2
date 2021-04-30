@@ -3,8 +3,9 @@
 ColorSetting::ColorSetting(QWidget *parent) : QPushButton(parent) {
     connect(this, &QPushButton::clicked, [this]() {
         QColorDialog *dialog = new QColorDialog(this);
-        QColor color = dialog->getColor();
-        if (color.isValid()) {
+        QColor newColor = dialog->getColor();
+        if (newColor.isValid()) {
+            color = newColor;
             QPalette p = palette();
             p.setColor(QPalette::Button, color);
             setPalette(p);

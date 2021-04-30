@@ -14,7 +14,9 @@ include_directories(toolbar)
 set(GUI_SRC viewer/Viewer.cpp viewer/Viewer.h MainWindow.cpp MainWindow.h toolbar/ToolBar.cpp
         toolbar/ToolBar.h toolbar/tools/CrossSquare.cpp toolbar/tools/CrossSquare.h toolbar/tools/Circle.cpp toolbar/tools/Circle.h
         toolbar/tools/Filter.cpp toolbar/tools/Filter.h toolbar/tools/Rotator.cpp toolbar/tools/Rotator.h
-        viewer/ImageLabel.cpp viewer/ImageLabel.h toolbar/tools/ColorSetting.cpp toolbar/tools/ColorSetting.h toolbar/tools/Tool.cpp toolbar/tools/Tool.h)
+        viewer/ImageLabel.cpp viewer/ImageLabel.h toolbar/tools/ColorSetting.cpp toolbar/tools/ColorSetting.h
+        toolbar/tools/Tool.cpp toolbar/tools/Tool.h qgraphics/BitMapQ.cpp qgraphics/BitMapQ.h
+        qgraphics/Vec2DQ.h qgraphics/ColorQ.h)
 
 add_library(gui STATIC ${GUI_SRC})
 target_link_libraries(gui Qt5::Core Qt5::Widgets Qt5::Gui graphics)

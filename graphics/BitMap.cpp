@@ -17,8 +17,12 @@ namespace Graphics {
         clear();
     }
 
+    bool BitMap::empty() {
+        return data == nullptr;
+    }
+
     void BitMap::clear() {
-        if (data != nullptr) {
+        if (!empty()) {
             delete[] data;
             data = nullptr;
         }
@@ -53,6 +57,10 @@ namespace Graphics {
 
         file.read((char *) header, HEADER_SIZE);
         type = *(int16_t *) (header + 0x00);
+        if (type != 0x4D42) {
+            throw std::invalid_argument("File is not BMP");
+        }
+
         fileSize = *(int32_t *) (header + 0x02);
         imgOffset = *(int32_t *) (header + 0x0A);
 
@@ -131,7 +139,7 @@ namespace Graphics {
             Vec2D s = (p2 - p1).sgn();
             int ex = d.x, ey = d.y;
             while (p1 != p2) {
-                if (p1 >= null && p1 <= end)
+                if (p1 >= null && p1 < end)
                     setPixel(p1, color);
                 if (ex > ey) {
                     p1.x += s.x;
@@ -161,7 +169,7 @@ namespace Graphics {
                     p = p1;
             for (int i = 0; i <= d.y; ++i, p.y += step1.y, p.x = p1.x) {
                 for (int j = 0; j <= d.x; ++j, p.x += step1.x) {
-                    if (p >= null && p <= end)
+                    if (p >= null && p < end)
                         setPixel(p, color);
                 }
             }
@@ -201,7 +209,7 @@ namespace Graphics {
         for (int i = 0; i <= 2 * (r + wd); ++i, p.y++) {
             p.x = -r2;
             for (int j = 0; j <= 2 * (r + wd); ++j, p.x++) {
-                if (p + c >= null && p + c <= end) {
+                if (p + c >= null && p + c < end) {
                     if (p * p < r2s) {
                         if (p * p >= r1s)
                             setPixel(p + c, color);
@@ -226,17 +234,17 @@ namespace Graphics {
     void BitMap::rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept {
         Mat2D rotate = rotation[a];
         BitMap copy = *this;
-        Vec2D c = (p1 + p2) / 2,
+        Vec2D c2 = (p1 + p2),
                 d = (p2 - p1).abs(),
                 s = (p2 - p1).sgn(),
                 p = p1,
-                v, vs, ps;
+                v2, vs, ps;
         drawRect(p1, p2, WHITE);
         for (int i = 0; i <= d.y; ++i, p.y += s.y, p.x = p1.x) {
             for (int j = 0; j <= d.x; ++j, p.x += s.x) {
-                v = p - c;
-                vs = Vec2D(rotate.x * v, rotate.y * v);
-                ps = vs + c;
+                v2 = 2 * p - c2;
+                vs = Vec2D(rotate.x * v2, rotate.y * v2);
+                ps = (vs + c2) / 2;
                 if (ps >= null && p >= null && ps <= end && p <= end)
                     setPixel(ps, copy.getPixel(p));
             }

@@ -1,8 +1,9 @@
 #ifndef CW2_VIEWER_H
 #define CW2_VIEWER_H
 
+
 #include <QMainWindow>
-#include <QImage>
+#include <QPixmap>
 #include <QLabel>
 #include <QScrollArea>
 #include <QApplication>
@@ -31,19 +32,20 @@ Q_OBJECT
 public:
 
     Viewer(QWidget *parent = nullptr);
-    ImageLabel *getImageLabel() const;
 
 public slots:
 
-    void setImage(const QImage &newImage);
+    void setImage(QPixmap *qimg);
 
-    const QImage &getImage() const;
+signals:
+
+    void mouseEvent(QMouseEvent *ev);
 
 private:
-    QImage image;
     ImageLabel *imageLabel;
     QScrollArea *scrollArea;
     QVBoxLayout *lt;
 };
+
 
 #endif //CW2_VIEWER_H

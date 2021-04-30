@@ -22,7 +22,7 @@ namespace Graphics {
     extern const Mat2D rotation[3];
 
     class BitMap {
-    private:
+    protected:
         static const int DEPTH = 24;
         static const int HEADER_SIZE = 14;
         static const int CORE_VERSION_SIZE = 12;
@@ -43,11 +43,13 @@ namespace Graphics {
 
         void clear();
 
+        bool empty();
+
         void read(std::string name) noexcept(false);
 
-        BitMap(std::string name) noexcept(false);
-
         void save(std::string name) noexcept(false);
+
+        BitMap(std::string name) noexcept(false);
 
         int getPixelPos(Vec2D pos) noexcept(false);
 
@@ -64,15 +66,15 @@ namespace Graphics {
         void drawRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
                       Color fillColor = BLACK) noexcept;
 
-        void drawCrossRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
+        virtual void drawCrossRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
                            Color fillColor = BLACK) noexcept;
 
-        void filter(Channel c, int val) noexcept;
+        virtual void filter(Channel c, int val) noexcept;
 
-        void drawCircle(Vec2D c, int r, Color color = BLACK, int wd = 0, bool fill = false,
+        virtual void drawCircle(Vec2D c, int r, Color color = BLACK, int wd = 0, bool fill = false,
                         Color fillColor = BLACK) noexcept;
 
-        void rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept;
+        virtual void rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept;
     };
 }
 #endif //BITMAP_H

@@ -11,6 +11,8 @@ namespace Graphics {
 
         Vector<V>() = default;
 
+        Vector<V>(const Vector<V> &v) = default;
+
         Vector<V>(V x, V y) : x(x), y(y) {}
 
         Vector<V> sgn() {

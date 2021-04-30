@@ -1,3 +1,4 @@
+#include <sys/param.h>
 #include "CrossSquare.h"
 
 CrossSquare::CrossSquare(QWidget *parent, QWidget *buttonParent) :
@@ -7,6 +8,7 @@ CrossSquare::CrossSquare(QWidget *parent, QWidget *buttonParent) :
     fillColor = new ColorSetting(this);
     fill = new QRadioButton(this);
     wd = new QSlider(Qt::Horizontal, this);
+    wd->setRange(1, 100);
 
     QLabel *colorLabel = new QLabel("Цвет", this),
             *wdLabel = new QLabel("Толщина", this),
@@ -31,4 +33,29 @@ CrossSquare::CrossSquare(QWidget *parent, QWidget *buttonParent) :
     });
 
     setLayout(layout);
+}
+
+void CrossSquare::process(QMouseEvent *ev, BitMapQ *bm) {
+    switch (ev->type()) {
+        case QEvent::MouseButtonPress:
+            p1 = ev->pos();
+            break;
+        case QEvent::MouseMove: {
+            p2 = ev->pos();
+            QPixmap buffer(*bm->getQImg());
+            QPainter painter(&buffer);
+            Vec2DQ v(p2 - p1);
+            v = Vec2DQ(v.sgn() * MAX(abs(v.x), abs(v.y)));
+            p2 = p1 + v.point();
+            painter.setPen(QPen(Qt::black, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.drawRect(QRect(p1, p2));
+            emit update(&buffer);
+            break;
+        }
+        case QEvent::MouseButtonRelease:
+            bm->drawCrossRect(p1, p2, color->getColor(), wd->value(), fill->isChecked(), fillColor->getColor());
+            bm->updQImg();
+            emit update(bm->getQImg());
+            break;
+    }
 }

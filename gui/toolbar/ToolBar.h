@@ -12,6 +12,7 @@
 #include "toolbar/tools/Circle.h"
 #include "toolbar/tools/Filter.h"
 #include "toolbar/tools/Rotator.h"
+#include "qgraphics/BitMapQ.h"
 
 class ToolBar : public QWidget {
 Q_OBJECT
@@ -21,9 +22,12 @@ public:
 
 public slots:
 
-    void mouseHandler(QMouseEvent *ev);
+    void paintHandler(QMouseEvent *ev, BitMapQ *bm);
 
-    void toolPicked(Tool* tool);
+    void toolPicked(Tool *tool);
+
+signals:
+    void update(QPixmap *qimg);
 
 private:
     QVBoxLayout *lt;

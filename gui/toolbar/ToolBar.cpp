@@ -19,6 +19,9 @@ ToolBar::ToolBar(QWidget *parent) : QWidget(parent) {
         toolsPickLt->addWidget(i->getActive());
         toolSettingsLt->addWidget(i);
         connect(i, &Tool::picked, this, &ToolBar::toolPicked);
+        connect(i, &Tool::update, [this](QPixmap *qimg) {
+            emit update(qimg);
+        });
         i->setVisible(false);
     }
     toolSettings->setLayout(toolSettingsLt);
@@ -29,8 +32,10 @@ ToolBar::ToolBar(QWidget *parent) : QWidget(parent) {
     setLayout(lt);
 }
 
-void ToolBar::mouseHandler(QMouseEvent *ev) {
-    qDebug() << ev->pos();
+void ToolBar::paintHandler(QMouseEvent *ev, BitMapQ *bm) {
+    if (currentTool != nullptr && !bm->empty()) {
+        currentTool->process(ev, bm);
+    }
 }
 
 void ToolBar::toolPicked(Tool *tool) {

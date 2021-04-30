@@ -8,6 +8,9 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QSizePolicy>
+#include <QMouseEvent>
+#include <QEvent>
+#include <QPainter>
 #include "ColorSetting.h"
 #include "Tool.h"
 
@@ -16,11 +19,14 @@ Q_OBJECT
 public:
     CrossSquare(QWidget *parent = nullptr, QWidget *buttonParent = nullptr);
 
+    void process(QMouseEvent *ev, BitMapQ *bm) override;
+
 private:
     QVBoxLayout *layout;
     ColorSetting *color, *fillColor;
     QSlider *wd;
     QRadioButton *fill;
+    QPoint p1, p2;
 };
 
 
