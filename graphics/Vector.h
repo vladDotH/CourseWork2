@@ -89,7 +89,6 @@ namespace Graphics {
         }
     };
 
-
     using Vec2D = Vector<int>;
     using Mat2D = Vector<Vector<int>>;
     extern const Vec2D e1, e2, null, one;

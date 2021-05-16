@@ -72,14 +72,15 @@ namespace Graphics {
             depth = *(int16_t *) (data + 0x0A);
         }
 
-        paddingWidth = width * 3 + width % 4;
-        img = data + (imgOffset - HEADER_SIZE);
-        end = Vec2D(width, height);
-
         if (depth != DEPTH) {
             clear();
             throw std::invalid_argument("Bad file`s depth");
         }
+
+        paddingWidth = width * 3 + width % 4;
+        img = data + (imgOffset - HEADER_SIZE);
+        end = Vec2D(width, height);
+
         file.read((char *) (data + infoSize), dataSize - infoSize);
         img = data + imgOffset - HEADER_SIZE;
         file.close();
@@ -188,27 +189,32 @@ namespace Graphics {
     }
 
     void BitMap::drawCrossRect(Vec2D p1, Vec2D p2, Color color, int wd, bool fill, Color fillColor) noexcept {
-        wd--;
-        Vec2D p3(p2.x, p1.y), p4(p1.x, p2.y),
-                step1 = (p2 - p1).sgn(), step2 = (p4 - p3).sgn(),
-                p11 = p1 + step1 * wd, p22 = p2 + (-step1) * wd,
-                p33 = p3 + step2 * wd, p44 = p4 + (-step2) * wd;
-        wd++;
-        drawRect(p1, p2, color, wd, fill, fillColor);
-        drawLine(p11, p22, color, wd);
+        Vec2D d = (p2 - p1).abs();
+        if (wd > d.x/2 || wd > d.y) {
+            drawRect(p1, p2, color);
+        } else {
+            wd--;
+            Vec2D p3(p2.x, p1.y), p4(p1.x, p2.y),
+                    step1 = (p2 - p1).sgn(), step2 = (p4 - p3).sgn(),
+                    p11 = p1 + step1 * wd, p22 = p2 + (-step1) * wd,
+                    p33 = p3 + step2 * wd, p44 = p4 + (-step2) * wd;
+            wd++;
+            drawRect(p1, p2, color, wd, fill, fillColor);
+            drawLine(p11, p22, color, wd);
         drawLine(p33, p44, color, wd);
+        }
     }
 
     void BitMap::drawCircle(Vec2D c, int r, Color color, int wd, bool fill, Color fillColor) noexcept {
-        Vec2D p = -one * (r + wd);
-        int r1 = r, r2 = r + wd;
+        Vec2D p = -one * r;
+        int r1 = r, r2 = r - wd;
         int r1s = r1 * r1, r2s = r2 * r2;
-        for (int i = 0; i <= 2 * (r + wd); ++i, p.y++) {
-            p.x = -r2;
-            for (int j = 0; j <= 2 * (r + wd); ++j, p.x++) {
+        for (int i = 0; i <= 2 * r; ++i, p.y++) {
+            p.x = -r1;
+            for (int j = 0; j <= 2 * r; ++j, p.x++) {
                 if (p + c >= null && p + c < end) {
-                    if (p * p < r2s) {
-                        if (p * p >= r1s)
+                    if (p * p < r1s) {
+                        if (p * p >= r2s || r2 < 0)
                             setPixel(p + c, color);
                         else if (fill)
                             setPixel(p + c, fillColor);
