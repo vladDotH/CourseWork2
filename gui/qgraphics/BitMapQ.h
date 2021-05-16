@@ -13,6 +13,14 @@ using namespace Graphics;
 
 class BitMapQ : public BitMap {
 public:
+    using BitMap::BitMap;
+
+    BitMapQ(QString s) : BitMap(s.toStdString()) {}
+
+    void read(QString s);
+
+    void copy(BitMapQ &cp);
+
     Vec2DQ transform(QPoint p);
 
     void updQImg();
@@ -28,6 +36,7 @@ public:
     void rotate(QPoint p1, QPoint p2, RotateAngle a) noexcept;
 
     void filter(Channel c, int val) noexcept override;
+
 
 private:
     QPixmap *qimg = new QPixmap;

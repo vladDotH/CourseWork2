@@ -15,12 +15,12 @@ BitMapQ::~BitMapQ() {
     delete qimg;
 }
 
-void BitMapQ::drawCrossRect(QPoint p1, QPoint p2, QColor color, int wd, bool fill, QColor fillColor) noexcept {
-    BitMap::drawCrossRect(transform(p1), transform(p2), ColorQ(color), wd, fill, ColorQ(fillColor));
-}
-
 Vec2DQ BitMapQ::transform(QPoint p) {
     return Vec2DQ(p.x(), height - p.y());
+}
+
+void BitMapQ::drawCrossRect(QPoint p1, QPoint p2, QColor color, int wd, bool fill, QColor fillColor) noexcept {
+    BitMap::drawCrossRect(transform(p1), transform(p2), ColorQ(color), wd, fill, ColorQ(fillColor));
 }
 
 void BitMapQ::drawCircle(QPoint c, int r, QColor color, int wd, bool fill, QColor fillColor) noexcept {
@@ -33,5 +33,13 @@ void BitMapQ::rotate(QPoint p1, QPoint p2, RotateAngle a) noexcept {
 
 void BitMapQ::filter(Channel c, int val) noexcept {
     BitMap::filter(c, val);
+}
+
+void BitMapQ::read(QString s) {
+    BitMap::read(s.toStdString());
+}
+
+void BitMapQ::copy(BitMapQ &cp) {
+    BitMap::copy(cp);
 }
 

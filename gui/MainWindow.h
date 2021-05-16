@@ -38,6 +38,10 @@ private slots:
 
     void saveAs();
 
+    void info();
+
+    void help();
+
 signals:
     void paintEvent(QMouseEvent *ev, BitMapQ *bm);
 
@@ -47,6 +51,7 @@ private:
     Viewer *viewer;
     ToolBar *toolBar;
     BitMapQ img;
+    QAction *infoAct;
 };
 
 #endif //CW2_MAINWINDOW

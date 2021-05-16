@@ -13,7 +13,6 @@ public:
 
     const QColor &getColor() const;
 
-
 private:
     QColor color = Qt::white;
 };

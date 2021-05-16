@@ -29,17 +29,32 @@ namespace Graphics {
 
         byte header[HEADER_SIZE], *data = nullptr, *img;
         int16_t type;
-        int32_t fileSize, imgOffset;
+        int32_t fileSize, imgOffset, dataSize;
         int32_t infoSize, width, height, paddingWidth;
         int16_t depth;
         Vec2D end;
+        std::string name;
 
     public:
         BitMap() = default;
 
-        BitMap(const BitMap &bm);
+        BitMap(const BitMap &bm) = default;
+
+        void copy(BitMap &cp);
 
         ~BitMap();
+
+        int32_t getFileSize() const;
+
+        int32_t getInfoSize() const;
+
+        int32_t getWidth() const;
+
+        int32_t getHeight() const;
+
+        int16_t getDepth() const;
+
+        const std::string &getName() const;
 
         void clear();
 

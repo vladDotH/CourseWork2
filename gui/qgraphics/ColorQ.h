@@ -9,7 +9,7 @@ using namespace Graphics;
 
 class ColorQ : public Color {
 public:
-    ColorQ(const QColor& c) : Color(c.red(), c.green(), c.blue()) {}
+    ColorQ(const QColor &c) : Color(c.red(), c.green(), c.blue()) {}
 };
 
 

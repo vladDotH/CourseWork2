@@ -28,20 +28,12 @@ namespace Graphics {
         }
     }
 
-    BitMap::BitMap(const BitMap &bm) {
-        type = bm.type;
-        fileSize = bm.fileSize;
-        imgOffset = bm.imgOffset;
-        data = new byte[fileSize - HEADER_SIZE];
-        infoSize = bm.infoSize;
-        width = bm.width;
-        height = bm.height;
-        depth = bm.depth;
-        paddingWidth = bm.paddingWidth;
-        end = bm.end;
-        std::copy(bm.header, bm.header + HEADER_SIZE, header);
-        std::copy(bm.data, bm.data + fileSize - HEADER_SIZE, data);
-        img = data + (imgOffset - HEADER_SIZE);
+    void BitMap::copy(BitMap &cp) {
+        cp = *this;
+        cp.data = new byte[dataSize];
+        std::copy(header, header + HEADER_SIZE, cp.header);
+        std::copy(data, data + dataSize, cp.data);
+        cp.img = cp.data + imgOffset - HEADER_SIZE;
     }
 
     BitMap::BitMap(std::string name) noexcept(false) {
@@ -49,6 +41,7 @@ namespace Graphics {
     }
 
     void BitMap::read(std::string name) noexcept(false) {
+        this->name = name;
         clear();
         std::ifstream file(name, std::ios::binary);
         if (!file)
@@ -62,11 +55,13 @@ namespace Graphics {
 
         fileSize = *(int32_t *) (header + 0x02);
         imgOffset = *(int32_t *) (header + 0x0A);
+        dataSize = fileSize - HEADER_SIZE;
 
-        data = new byte[fileSize - HEADER_SIZE];
-        file.read((char *) data, fileSize - HEADER_SIZE);
+        data = new byte[dataSize];
+        file.read((char *) data, sizeof(infoSize));
         infoSize = *(int32_t *) (data + 0x00);
 
+        file.read((char *) (data + sizeof(infoSize)), infoSize - sizeof(infoSize));
         if (infoSize > CORE_VERSION_SIZE) {
             width = *(int32_t *) (data + 0x04);
             height = *(int32_t *) (data + 0x08);
@@ -80,11 +75,14 @@ namespace Graphics {
         paddingWidth = width * 3 + width % 4;
         img = data + (imgOffset - HEADER_SIZE);
         end = Vec2D(width, height);
-        file.close();
 
         if (depth != DEPTH) {
+            clear();
             throw std::invalid_argument("Bad file`s depth");
         }
+        file.read((char *) (data + infoSize), dataSize - infoSize);
+        img = data + imgOffset - HEADER_SIZE;
+        file.close();
     }
 
     void BitMap::save(std::string name) noexcept(false) {
@@ -232,7 +230,8 @@ namespace Graphics {
 
     void BitMap::rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept {
         Mat2D rotate = rotation[a];
-        BitMap copy = *this;
+        BitMap cp;
+        this->copy(cp);
         Vec2D c2 = (p1 + p2),
                 d = (p2 - p1).abs(),
                 s = (p2 - p1).sgn(),
@@ -245,9 +244,33 @@ namespace Graphics {
                 vs = Vec2D(rotate.x * v2, rotate.y * v2);
                 ps = (vs + c2) / 2;
                 if (ps >= null && p >= null && ps < end && p < end)
-                    setPixel(ps, copy.getPixel(p));
+                    setPixel(ps, cp.getPixel(p));
             }
         }
-        copy.clear();
+        cp.clear();
+    }
+
+    int32_t BitMap::getFileSize() const {
+        return fileSize;
+    }
+
+    int32_t BitMap::getInfoSize() const {
+        return infoSize;
+    }
+
+    int32_t BitMap::getWidth() const {
+        return width;
+    }
+
+    int32_t BitMap::getHeight() const {
+        return height;
+    }
+
+    int16_t BitMap::getDepth() const {
+        return depth;
+    }
+
+    const std::string &BitMap::getName() const {
+        return name;
     }
 }

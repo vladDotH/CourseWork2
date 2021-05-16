@@ -21,7 +21,7 @@ Rotator::Rotator(QWidget *parent, QWidget *buttonParent) :
     connect(d180, &QRadioButton::clicked, [this](bool checked) {
         angle = RotateAngle::D180;
     });
-    connect(d90, &QRadioButton::clicked, [this](bool checked) {
+    connect(d270, &QRadioButton::clicked, [this](bool checked) {
         angle = RotateAngle::D270;
     });
     d90->setChecked(true);

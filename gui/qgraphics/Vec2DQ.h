@@ -9,11 +9,11 @@ using namespace Graphics;
 
 class Vec2DQ : public Vec2D {
 public:
+    using Vec2D::Vector;
+
     Vec2DQ(QPoint p) : Vec2D(p.x(), p.y()) {}
 
     Vec2DQ(Vec2D v) : Vec2D(v) {}
-
-    using Vec2D::Vector;
 
     QPoint point() { return QPoint(x, y); }
 };

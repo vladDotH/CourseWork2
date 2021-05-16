@@ -17,7 +17,6 @@
 class ToolBar : public QWidget {
 Q_OBJECT
 public:
-
     ToolBar(QWidget *parent = nullptr);
 
 public slots:
@@ -27,6 +26,7 @@ public slots:
     void toolPicked(Tool *tool);
 
 signals:
+
     void update(QPixmap *qimg);
 
 private:
