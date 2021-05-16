@@ -36,39 +36,34 @@ Circle::Circle(QWidget *parent, QWidget *buttonParent) :
 }
 
 void Circle::process(QMouseEvent *ev, BitMapQ *bm) {
-    switch (ev->type()) {
-        case QEvent::MouseButtonPress:
-            p1 = ev->pos();
-            break;
-        case QEvent::MouseMove: {
-            p2 = ev->pos();
-            QPixmap buffer(*bm->getQImg());
-            QPainter painter(&buffer);
-            painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
-            painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
-            QPoint d = (p1 - ev->pos());
-            if (QApplication::keyboardModifiers() == Qt::ShiftModifier) {
-                Vec2DQ v(p2 - p1);
-                v = Vec2DQ(v.sgn() * MAX(abs(v.x), abs(v.y)));
-                p2 = p1 + v.point();
-                c = (p2 + p1) / 2;
-                R = abs(p2.x() - p1.x()) / 2;
-                painter.drawRect(QRect(p1, p2));
-                painter.drawEllipse(c, R, R);
-            } else {
-                R = QVector2D(d).length();
-                c = p1;
-                painter.drawEllipse(p1, R, R);
-            }
-            emit update(&buffer);
-            break;
+    if (ev->type() == QEvent::MouseButtonPress) {
+        p1 = ev->pos();
+    }
+    if (ev->type() == QEvent::MouseMove || ev->type() == QEvent::MouseButtonRelease) {
+        p2 = ev->pos();
+        QPixmap buffer(*bm->getQImg());
+        QPainter painter(&buffer);
+        painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
+        painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
+        QPoint d = (p1 - ev->pos());
+        if (QApplication::keyboardModifiers() == Qt::ShiftModifier) {
+            Vec2DQ v(p2 - p1);
+            v = Vec2DQ(v.sgn() * MAX(abs(v.x), abs(v.y)));
+            p2 = p1 + v.point();
+            c = (p2 + p1) / 2;
+            R = abs(p2.x() - p1.x()) / 2;
+            painter.drawRect(QRect(p1, p2));
+            painter.drawEllipse(c, R, R);
+        } else {
+            R = QVector2D(d).length();
+            c = p1;
+            painter.drawEllipse(p1, R, R);
         }
-        case QEvent::MouseButtonRelease:
-            bm->drawCircle(c, R, color->getColor(), wd->value(), fill->isChecked(), fillColor->getColor());
-            bm->updQImg();
-            emit update(bm->getQImg());
-            break;
-        default:
-            break;
+        emit update(&buffer);
+    }
+    if (ev->type() == QEvent::MouseButtonRelease) {
+        bm->drawCircle(c, R, color->getColor(), wd->value(), fill->isChecked(), fillColor->getColor());
+        bm->updQImg();
+        emit update(bm->getQImg());
     }
 }

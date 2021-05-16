@@ -29,24 +29,21 @@ Rotator::Rotator(QWidget *parent, QWidget *buttonParent) :
 }
 
 void Rotator::process(QMouseEvent *ev, BitMapQ *bm) {
-    switch (ev->type()) {
-        case QEvent::MouseButtonPress:
-            p1 = ev->pos();
-            break;
-        case QEvent::MouseMove: {
-            p2 = ev->pos();
-            QPixmap buffer(*bm->getQImg());
-            QPainter painter(&buffer);
-            painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
-            painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
-            painter.drawRect(QRect(p1, p2));
-            emit update(&buffer);
-            break;
-        }
-        case QEvent::MouseButtonRelease:
-            bm->rotate(p1, p2, angle);
-            bm->updQImg();
-            emit update(bm->getQImg());
-            break;
+    if (ev->type() == QEvent::MouseButtonPress) {
+        p1 = ev->pos();
+    }
+    if (ev->type() == QEvent::MouseMove || ev->type() == QEvent::MouseButtonRelease) {
+        p2 = ev->pos();
+        QPixmap buffer(*bm->getQImg());
+        QPainter painter(&buffer);
+        painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
+        painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
+        painter.drawRect(QRect(p1, p2));
+        emit update(&buffer);
+    }
+    if (ev->type() == QEvent::MouseButtonRelease) {
+        bm->rotate(p1, p2, angle);
+        bm->updQImg();
+        emit update(bm->getQImg());
     }
 }

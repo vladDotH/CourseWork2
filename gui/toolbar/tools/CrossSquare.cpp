@@ -36,27 +36,24 @@ CrossSquare::CrossSquare(QWidget *parent, QWidget *buttonParent) :
 }
 
 void CrossSquare::process(QMouseEvent *ev, BitMapQ *bm) {
-    switch (ev->type()) {
-        case QEvent::MouseButtonPress:
-            p1 = ev->pos();
-            break;
-        case QEvent::MouseMove: {
-            p2 = ev->pos();
-            QPixmap buffer(*bm->getQImg());
-            QPainter painter(&buffer);
-            painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
-            painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
-            Vec2DQ v(p2 - p1);
-            v = Vec2DQ(v.sgn() * MAX(abs(v.x), abs(v.y)));
-            p2 = p1 + v.point();
-            painter.drawRect(QRect(p1, p2));
-            emit update(&buffer);
-            break;
-        }
-        case QEvent::MouseButtonRelease:
-            bm->drawCrossRect(p1, p2, color->getColor(), wd->value(), fill->isChecked(), fillColor->getColor());
-            bm->updQImg();
-            emit update(bm->getQImg());
-            break;
+    if (ev->type() == QEvent::MouseButtonPress) {
+        p1 = ev->pos();
+    }
+    if (ev->type() == QEvent::MouseMove || ev->type() == QEvent::MouseButtonRelease) {
+        p2 = ev->pos();
+        QPixmap buffer(*bm->getQImg());
+        QPainter painter(&buffer);
+        painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
+        painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
+        Vec2DQ v(p2 - p1);
+        v = Vec2DQ(v.sgn() * MAX(abs(v.x), abs(v.y)));
+        p2 = p1 + v.point();
+        painter.drawRect(QRect(p1, p2));
+        emit update(&buffer);
+    }
+    if (ev->type() == QEvent::MouseButtonRelease) {
+        bm->drawCrossRect(p1, p2, color->getColor(), wd->value(), fill->isChecked(), fillColor->getColor());
+        bm->updQImg();
+        emit update(bm->getQImg());
     }
 }
