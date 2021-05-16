@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     infoAct = fileMenu->addAction("Информация", this, &MainWindow::info);
     infoAct->setVisible(false);
     saveAct->setVisible(false);
+    menuBar()->addAction("Справка", this, &MainWindow::help);
+    menuBar()->addAction("Выход", this, &QWidget::close);
 
     central = new QSplitter(this);
     lt = new QGridLayout(central);
@@ -25,9 +27,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     });
     connect(this, &MainWindow::paintEvent, toolBar, &ToolBar::paintHandler);
     connect(toolBar, &ToolBar::update, viewer, &Viewer::setImage);
-
-    menuBar()->addAction("Помощь", this, &MainWindow::help);
-    menuBar()->addAction("Выход", this, &QWidget::close);
 }
 
 bool MainWindow::loadFile(const QString &fileName) {
@@ -70,8 +69,7 @@ bool MainWindow::saveFile(const QString &fileName) {
 }
 
 void MainWindow::open() {
-    QString
-            file = QFileDialog::getOpenFileName(this, "Открыть файл", "/home",
+    QString file = QFileDialog::getOpenFileName(this, "Открыть файл", "/home",
                                                 "bmp Изображения (*.bmp *.BMP)");
     if (!file.isEmpty()) {
         loadFile(file);
@@ -86,16 +84,17 @@ void MainWindow::saveAs() {
 }
 
 void MainWindow::info() {
-    QMessageBox::information(this, "Информация о файле",
-                             QString("Файл: %1\n"
-                                     "Размер %2 (байт)\n"
-                                     "Высота %3, Ширинна %4\n"
-                                     "Глубина цвета %5\n"
-                                     "Размер BitMapINFO %6")
-                                     .arg(QString::fromStdString(img.getName()))
-                                     .arg(img.getFileSize())
-                                     .arg(img.getHeight()).arg(img.getWidth())
-                                     .arg(img.getDepth()).arg(img.getInfoSize()), "OK");
+    QMessageBox::information(
+            this, "Информация о файле",
+            QString("Файл: %1\n"
+                    "Размер %2 (байт)\n"
+                    "Высота %3, Ширинна %4\n"
+                    "Глубина цвета %5\n"
+                    "Размер BitMapINFO %6")
+                    .arg(QString::fromStdString(img.getName()))
+                    .arg(img.getFileSize())
+                    .arg(img.getHeight()).arg(img.getWidth())
+                    .arg(img.getDepth()).arg(img.getInfoSize()), "OK");
 }
 
 void MainWindow::help() {
@@ -107,7 +106,6 @@ void MainWindow::help() {
                    "С зажатым 'Shift' - вписывает окружность в выбранную квадратную область\n\n"
                    "4) Поворот - поворачивает часть изображения на выбранный угол (по часовой стрелке)";
 
-    QMessageBox::information(this, "Справка",
-                             HELP, "OK");
+    QMessageBox::information(this, "Справка", HELP, "OK");
 }
 
