@@ -4,9 +4,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Рисовалка");
     QMenu *fileMenu = menuBar()->addMenu("Файл");
     fileMenu->addAction("Открыть", this, &MainWindow::open);
-    fileMenu->addAction("Сохранить как", this, &MainWindow::saveAs);
+    saveAct = fileMenu->addAction("Сохранить как", this, &MainWindow::saveAs);
     infoAct = fileMenu->addAction("Информация", this, &MainWindow::info);
     infoAct->setVisible(false);
+    saveAct->setVisible(false);
 
     central = new QSplitter(this);
     lt = new QGridLayout(central);
@@ -49,6 +50,7 @@ bool MainWindow::loadFile(const QString &fileName) {
     statusBar()->showMessage(message);
 
     infoAct->setVisible(true);
+    saveAct->setVisible(true);
     return true;
 }
 
@@ -97,7 +99,15 @@ void MainWindow::info() {
 }
 
 void MainWindow::help() {
+    QString HELP = "Загрузка/Сохранение/Информация файла - в меню \"Файл\"\n\n\n"
+                   "Выбор инструментов - правая панель\n\n"
+                   "1) Квадрат с диагоналями - рисует квадрат с диагоналями определённого цвета, толщины и заливки\n\n"
+                   "2) Фильтр каналов - выставляет все пиксели выбранного цвета в выбранную величину (для применения - щелчок по изображению)\n\n"
+                   "3) Окружность - рисует окружность с диагоналями определённого цвета, толщины и заливки. "
+                   "С зажатым 'Shift' - вписывает окружность в выбранную квадратную область\n\n"
+                   "4) Поворот - поворачивает часть изображения на выбранный угол (по часовой стрелке)";
+
     QMessageBox::information(this, "Справка",
-                             "...", "OK");
+                             HELP, "OK");
 }
 

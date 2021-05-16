@@ -51,7 +51,7 @@ private:
     Viewer *viewer;
     ToolBar *toolBar;
     BitMapQ img;
-    QAction *infoAct;
+    QAction *infoAct, *saveAct;
 };
 
 #endif //CW2_MAINWINDOW
