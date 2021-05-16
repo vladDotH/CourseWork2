@@ -53,6 +53,7 @@ void Circle::process(QMouseEvent *ev, BitMapQ *bm) {
                 c = (p2 + p1) / 2;
                 R = abs(p2.x() - p1.x()) / 2;
                 painter.drawRect(QRect(p1, p2));
+                painter.drawEllipse(c, R, R);
             } else {
                 R = QVector2D(d).length();
                 c = p1;

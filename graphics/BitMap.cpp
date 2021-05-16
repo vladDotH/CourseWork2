@@ -38,11 +38,10 @@ namespace Graphics {
         height = bm.height;
         depth = bm.depth;
         paddingWidth = bm.paddingWidth;
-        img = data + (imgOffset - HEADER_SIZE);
-        end = Vec2D(width, height);
-
+        end = bm.end;
         std::copy(bm.header, bm.header + HEADER_SIZE, header);
         std::copy(bm.data, bm.data + fileSize - HEADER_SIZE, data);
+        img = data + (imgOffset - HEADER_SIZE);
     }
 
     BitMap::BitMap(std::string name) noexcept(false) {
@@ -73,8 +72,8 @@ namespace Graphics {
             height = *(int32_t *) (data + 0x08);
             depth = *(int16_t *) (data + 0x0E);
         } else {
-            width = *(int16_t *) (data + 0x04);
-            height = *(int16_t *) (data + 0x06);
+            width = *(uint16_t *) (data + 0x04);
+            height = *(uint16_t *) (data + 0x06);
             depth = *(int16_t *) (data + 0x0A);
         }
 
@@ -102,7 +101,7 @@ namespace Graphics {
     }
 
     int BitMap::getPixelPos(Vec2D pos) noexcept(false) {
-        if (pos < null || pos > end)
+        if (!(pos >= null && pos < end))
             throw std::out_of_range("Out of image size");
         return paddingWidth * (int) pos.y + 3 * (int) pos.x;
     }

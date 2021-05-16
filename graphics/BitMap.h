@@ -67,12 +67,12 @@ namespace Graphics {
                       Color fillColor = BLACK) noexcept;
 
         virtual void drawCrossRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
-                           Color fillColor = BLACK) noexcept;
+                                   Color fillColor = BLACK) noexcept;
 
         virtual void filter(Channel c, int val) noexcept;
 
         virtual void drawCircle(Vec2D c, int r, Color color = BLACK, int wd = 0, bool fill = false,
-                        Color fillColor = BLACK) noexcept;
+                                Color fillColor = BLACK) noexcept;
 
         virtual void rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept;
     };
