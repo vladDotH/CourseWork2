@@ -37,7 +37,8 @@ void Rotator::process(QMouseEvent *ev, BitMapQ *bm) {
             p2 = ev->pos();
             QPixmap buffer(*bm->getQImg());
             QPainter painter(&buffer);
-            painter.setPen(QPen(Qt::black, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.setCompositionMode(QPainter::RasterOp_SourceAndNotDestination);
+            painter.setPen(QPen(Qt::white, 3, Qt::DashDotLine));
             painter.drawRect(QRect(p1, p2));
             emit update(&buffer);
             break;
