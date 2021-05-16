@@ -190,7 +190,7 @@ namespace Graphics {
 
     void BitMap::drawCrossRect(Vec2D p1, Vec2D p2, Color color, int wd, bool fill, Color fillColor) noexcept {
         Vec2D d = (p2 - p1).abs();
-        if (wd > d.x/2 || wd > d.y) {
+        if (wd > d.x / 2 || wd > d.y / 2) { //!
             drawRect(p1, p2, color);
         } else {
             wd--;
@@ -201,7 +201,7 @@ namespace Graphics {
             wd++;
             drawRect(p1, p2, color, wd, fill, fillColor);
             drawLine(p11, p22, color, wd);
-        drawLine(p33, p44, color, wd);
+            drawLine(p33, p44, color, wd);
         }
     }
 
