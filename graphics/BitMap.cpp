@@ -48,31 +48,31 @@ namespace Graphics {
             throw std::invalid_argument("Bad file");
 
         file.read((char *) header, HEADER_SIZE);
-        type = *(int16_t *) (header + 0x00);
+        type = *(int16_t *) (header + TYPE);
         if (type != 0x4D42) {
             throw std::invalid_argument("File is not BMP");
         }
 
-        fileSize = *(int32_t *) (header + 0x02);
-        imgOffset = *(int32_t *) (header + 0x0A);
+        fileSize = *(int32_t *) (header + FILE_SIZE);
+        imgOffset = *(int32_t *) (header + IMG_OFFSET);
         dataSize = fileSize - HEADER_SIZE;
 
         data = new byte[dataSize];
         file.read((char *) data, sizeof(infoSize));
-        infoSize = *(int32_t *) (data + 0x00);
+        infoSize = *(int32_t *) (data + INFO_SIZE);
 
         file.read((char *) (data + sizeof(infoSize)), infoSize - sizeof(infoSize));
         if (infoSize > CORE_VERSION_SIZE) {
-            width = *(int32_t *) (data + 0x04);
-            height = *(int32_t *) (data + 0x08);
-            depth = *(int16_t *) (data + 0x0E);
+            width = *(int32_t *) (data + WIDTH);
+            height = *(int32_t *) (data + HEIGHT);
+            depth = *(int16_t *) (data + DEPTH);
         } else {
-            width = *(uint16_t *) (data + 0x04);
-            height = *(uint16_t *) (data + 0x06);
-            depth = *(int16_t *) (data + 0x0A);
+            width = *(uint16_t *) (data + WIDTH);
+            height = *(uint16_t *) (data + HEIGHT_CORE);
+            depth = *(int16_t *) (data + DEPTH_CORE);
         }
 
-        if (depth != DEPTH) {
+        if (depth != AVAILABLE_DEPTH) {
             clear();
             throw std::invalid_argument("Bad file`s depth");
         }

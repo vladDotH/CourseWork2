@@ -19,11 +19,23 @@ namespace Graphics {
         D270 = 2
     };
 
+    enum Offsets {
+        TYPE = 0x00,
+        FILE_SIZE = 0x02,
+        IMG_OFFSET = 0x0A,
+        INFO_SIZE = 0x00,
+        WIDTH = 0x04,
+        HEIGHT = 0x08,
+        DEPTH = 0x0E,
+        HEIGHT_CORE = 0x06,
+        DEPTH_CORE = 0x0A
+    };
+
     extern const Mat2D rotation[3];
 
     class BitMap {
     protected:
-        static const int DEPTH = 24;
+        static const int AVAILABLE_DEPTH = 24;
         static const int HEADER_SIZE = 14;
         static const int CORE_VERSION_SIZE = 12;
 
@@ -81,15 +93,15 @@ namespace Graphics {
         void drawRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
                       Color fillColor = BLACK) noexcept;
 
-        virtual void drawCrossRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
-                                   Color fillColor = BLACK) noexcept;
+        void drawCrossRect(Vec2D p1, Vec2D p2, Color color = BLACK, int wd = 0, bool fill = false,
+                           Color fillColor = BLACK) noexcept;
 
-        virtual void filter(Channel c, int val) noexcept;
+        void filter(Channel c, int val) noexcept;
 
-        virtual void drawCircle(Vec2D c, int r, Color color = BLACK, int wd = 0, bool fill = false,
-                                Color fillColor = BLACK) noexcept;
+        void drawCircle(Vec2D c, int r, Color color = BLACK, int wd = 0, bool fill = false,
+                        Color fillColor = BLACK) noexcept;
 
-        virtual void rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept;
+        void rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept;
     };
 }
 #endif //BITMAP_H

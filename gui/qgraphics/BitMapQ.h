@@ -35,8 +35,7 @@ public:
 
     void rotate(QPoint p1, QPoint p2, RotateAngle a) noexcept;
 
-    void filter(Channel c, int val) noexcept override;
-
+    void filter(Channel c, int val) noexcept;
 
 private:
     QPixmap *qimg = new QPixmap;
