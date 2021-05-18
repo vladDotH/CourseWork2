@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "BitMap.h"
 
 namespace Graphics {
@@ -278,5 +279,78 @@ namespace Graphics {
 
     const std::string &BitMap::getName() const {
         return name;
+    }
+
+
+    void BitMap::uploadToData() {
+        memcpy(header + TYPE, &type, sizeof(type));
+        memcpy(header + FILE_SIZE, &fileSize, sizeof(fileSize));
+        memcpy(header + IMG_OFFSET, &imgOffset, sizeof(imgOffset));
+        memcpy(data + INFO_SIZE, &infoSize, sizeof(infoSize));
+        memcpy(data + WIDTH, &width, sizeof(width));
+        memcpy(data + HEIGHT, &height, sizeof(height));
+        memcpy(data + DEPTH, &depth, sizeof(depth));
+    }
+
+    BitMap::BitMap(Vec2D size, BitMap &infoSrc) {
+        width = size.x;
+        height = size.y;
+        end = Vec2D(width, height);
+        type = 0x4D42;
+        infoSize = 40;
+        depth = 24;
+        imgOffset = HEADER_SIZE + infoSize;
+        paddingWidth = width * 3 + width % 4;
+
+        dataSize = paddingWidth * height + infoSize;
+        fileSize = dataSize + HEADER_SIZE;
+        data = new byte[dataSize];
+
+        memcpy(header, infoSrc.header, HEADER_SIZE);
+        memcpy(data, infoSrc.data, dataSize);
+        uploadToData();
+    }
+
+    Vec2D BitMap::getSizeToRot(Vec2D end, RotateAngle a) {
+        switch (a) {
+            case D90:
+            case D270:
+                return Vec2D(end.y, end.x);
+            case D180:
+                return end;
+        }
+        return null;
+    }
+
+    Vec2D BitMap::transformToRot(Vec2D p, Vec2D end, RotateAngle a) {
+        switch (a) {
+            case D90:
+                return Vec2D(p.y, end.x - 1 - p.x);
+            case D180:
+                return Vec2D(end.x - 1 - p.x, end.y - 1 - p.y);
+            case D270:
+                return Vec2D(end.y - 1 - p.y, p.x);
+        }
+        return null;
+    }
+
+    void BitMap::fullRotate(BitMap &dest, RotateAngle a) {
+        Vec2D rotSize = getSizeToRot(end, a);
+        BitMap cp(rotSize, *this);
+        cp.copy(dest);
+        cp.clear();
+        Vec2D p;
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                p = transformToRot(Vec2D(j, i), end, a);
+                dest.setPixel(p, getPixel(Vec2D(j, i)));
+            }
+        }
+    }
+
+    void BitMap::fullRotate(RotateAngle a) {
+        BitMap bm;
+        fullRotate(bm, a);
+        bm.copy(*this);
     }
 }

@@ -102,6 +102,19 @@ namespace Graphics {
                         Color fillColor = BLACK) noexcept;
 
         void rotate(Vec2D p1, Vec2D p2, RotateAngle a) noexcept;
+
+
+        void uploadToData();
+
+        BitMap(Vec2D size, BitMap &infoSrc);
+
+        static Vec2D getSizeToRot(Vec2D end, RotateAngle a);
+
+        static Vec2D transformToRot(Vec2D p, Vec2D end, RotateAngle a);
+
+        void fullRotate(BitMap &dest, RotateAngle a);
+
+        void fullRotate(RotateAngle a);
     };
 }
 #endif //BITMAP_H

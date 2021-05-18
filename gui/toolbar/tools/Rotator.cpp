@@ -5,6 +5,7 @@ Rotator::Rotator(QWidget *parent, QWidget *buttonParent) :
     lt = new QVBoxLayout(this);
     angles = new QGroupBox("Угол поворота (градусы)", this);
     anglesLt = new QVBoxLayout(angles);
+    full = new QCheckBox("Всё изображение");
     d90 = new QRadioButton("90", angles);
     d180 = new QRadioButton("180", angles);
     d270 = new QRadioButton("270", angles);
@@ -12,6 +13,7 @@ Rotator::Rotator(QWidget *parent, QWidget *buttonParent) :
     anglesLt->addWidget(d180);
     anglesLt->addWidget(d270);
     angles->setLayout(anglesLt);
+    lt->addWidget(full);
     lt->addWidget(angles);
     setLayout(lt);
 
@@ -30,9 +32,14 @@ Rotator::Rotator(QWidget *parent, QWidget *buttonParent) :
 
 void Rotator::process(QMouseEvent *ev, BitMapQ *bm) {
     if (ev->type() == QEvent::MouseButtonPress) {
-        p1 = ev->pos();
+        if (full->isChecked()) {
+            bm->fullRotate(angle);
+            bm->updQImg();
+            emit update(bm->getQImg());
+        } else
+            p1 = ev->pos();
     }
-    if (ev->type() == QEvent::MouseMove || ev->type() == QEvent::MouseButtonRelease) {
+    if ((ev->type() == QEvent::MouseMove || ev->type() == QEvent::MouseButtonRelease) && !full->isChecked()) {
         p2 = ev->pos();
         QPixmap buffer(*bm->getQImg());
         QPainter painter(&buffer);
@@ -41,7 +48,7 @@ void Rotator::process(QMouseEvent *ev, BitMapQ *bm) {
         painter.drawRect(QRect(p1, p2));
         emit update(&buffer);
     }
-    if (ev->type() == QEvent::MouseButtonRelease) {
+    if (ev->type() == QEvent::MouseButtonRelease && !full->isChecked()) {
         bm->rotate(p1, p2, angle);
         bm->updQImg();
         emit update(bm->getQImg());

@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QCheckBox>
 #include "Tool.h"
 
 class Rotator : public Tool {
@@ -20,6 +21,7 @@ public:
 private:
     QVBoxLayout *lt, *anglesLt;
     QGroupBox *angles;
+    QCheckBox *full;
     QRadioButton *d90, *d180, *d270;
     QPoint p1, p2;
     RotateAngle angle;
